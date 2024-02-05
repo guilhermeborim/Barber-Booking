@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from '../ui/card'
 import { useEffect, useState } from 'react'
+import axios from 'axios'
 
 const FormLogin = () => {
   const [isLogged, setIsLogged] = useState(false)
@@ -37,6 +38,7 @@ const FormLogin = () => {
   useEffect(() => {
     const token = localStorage.getItem('token')
     if (token) {
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`
       setIsLogged(true)
     }
   }, [])
@@ -57,6 +59,7 @@ const FormLogin = () => {
       if (status === 200) {
         toast.success(msg)
         localStorage.setItem('token', token)
+        axios.defaults.headers.common.Authorization = `Bearer ${token}`
         setIsLogged(true)
       }
       navigateToDashboard(id)

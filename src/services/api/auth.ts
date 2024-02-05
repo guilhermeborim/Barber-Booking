@@ -3,6 +3,7 @@ import {
   RegisterInterface,
   signInResponse,
   signUpResponse,
+  userDataResponse,
 } from '../../types/auth'
 import api from '../api'
 
@@ -22,4 +23,13 @@ export const signIn = async (dataLogin: LoginInterface) => {
   )
 
   return { data, status }
+}
+
+export const userData = async (id: userDataResponse) => {
+  const token = localStorage.getItem('token')
+  const { data } = await api.get(`/user/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+
+  return data
 }

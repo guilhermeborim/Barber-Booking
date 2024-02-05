@@ -20,6 +20,12 @@ export type signInResponse = {
   id: string
 }
 
+export type userDataResponse = {
+  name: string
+  email: string
+  id: string
+  token: string
+}
 export type TFormRegisterField =
   | 'name'
   | 'email'
