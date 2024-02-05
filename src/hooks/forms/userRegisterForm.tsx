@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { RegisterInterface } from '@/types/auth'
 
-export const useLoginForm = () => {
+export const useRegisterForm = () => {
   // validacao com zod de email e senha
 
   const registerFormValidationSchema = z

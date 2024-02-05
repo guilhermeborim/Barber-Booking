@@ -14,6 +14,12 @@ export type signUpResponse = {
   msg: string
 }
 
+export type signInResponse = {
+  token: string
+  msg: string
+  id: string
+}
+
 export type TFormRegisterField =
   | 'name'
   | 'email'

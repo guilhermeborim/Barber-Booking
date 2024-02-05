@@ -1,4 +1,9 @@
-import { RegisterInterface, signUpResponse } from '../../types/auth'
+import {
+  LoginInterface,
+  RegisterInterface,
+  signInResponse,
+  signUpResponse,
+} from '../../types/auth'
 import api from '../api'
 
 export const signUp = async (dataRegister: RegisterInterface) => {
@@ -8,4 +13,13 @@ export const signUp = async (dataRegister: RegisterInterface) => {
   )
 
   return data
+}
+
+export const signIn = async (dataLogin: LoginInterface) => {
+  const { data, status } = await api.post<signInResponse>(
+    '/auth/user',
+    dataLogin,
+  )
+
+  return { data, status }
 }
