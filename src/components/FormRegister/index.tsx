@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { signUp } from '@/services/api/auth'
 import { RegisterInterface, TFormRegisterField } from '@/types/auth'
-import { useLoginForm } from '../../hooks/forms/userRegisterForm'
+import { useRegisterForm } from '../../hooks/forms/userRegisterForm'
 import { toast } from 'sonner'
 import {
   Card,
@@ -16,7 +16,7 @@ const FormRegister = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useLoginForm()
+  } = useRegisterForm()
   const registerFormFields = [
     {
       name: 'name',
