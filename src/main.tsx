@@ -1,10 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { RouterProvider } from 'react-router-dom'
-import { router } from './routes/Routes.tsx'
+import App from './App.tsx'
+import { Toaster } from './components/ui/sonner'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <App />
+    <Toaster richColors position="top-center" />
   </React.StrictMode>,
 )

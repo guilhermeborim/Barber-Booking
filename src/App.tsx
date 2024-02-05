@@ -1,11 +1,12 @@
+import { BrowserRouter } from 'react-router-dom'
 import './App.css'
-import { Button } from './components/ui/button'
+import Rotas from './routes/Routes'
 
 function App() {
   return (
-    <div>
-      <Button>Clique aqui</Button>
-    </div>
+    <BrowserRouter>
+      <Rotas />
+    </BrowserRouter>
   )
 }
 
