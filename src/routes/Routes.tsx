@@ -1,14 +1,22 @@
-import DashboardPage from '@/pages/Dashboard'
-import LoginPage from '@/pages/Login'
 import RegisterPage from '@/pages/Register'
-import { Route, Routes } from 'react-router-dom'
+import DashboardPage from '@/pages/Dashboard'
+import { Routes, Route } from 'react-router-dom'
+import LoginPage from '@/pages/Login'
+import { PrivateRoute } from './PrivateRoute'
 
 function Rotas() {
   return (
     <Routes>
       <Route path="/" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
-      <Route path="/dashboard/:id" element={<DashboardPage />} />
+      <Route
+        path="/dashboard"
+        element={
+          <PrivateRoute>
+            <DashboardPage />
+          </PrivateRoute>
+        }
+      />
     </Routes>
   )
 }
