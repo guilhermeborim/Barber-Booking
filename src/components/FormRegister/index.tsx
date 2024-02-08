@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import { signUp } from '@/services/api/auth'
 import { RegisterInterface, TFormRegisterField } from '@/types/auth'
 import { useRegisterForm } from '../../hooks/forms/userRegisterForm'
@@ -10,8 +10,10 @@ import {
   CardHeader,
   CardTitle,
 } from '../ui/card'
+import { useState } from 'react'
 
 const FormRegister = () => {
+  const [isRegister, isSetRegister] = useState(false)
   const {
     register,
     handleSubmit,
@@ -43,16 +45,16 @@ const FormRegister = () => {
       placeholder: '******',
     },
   ]
-  function navigateToLogin() {
-    window.location.href = '/'
+  if (isRegister) {
+    return <Navigate to="/" />
   }
   const onRegister = async (data: RegisterInterface): Promise<void> => {
     try {
       const { msg } = await signUp(data)
       if (msg) {
         toast.success(msg)
+        isSetRegister(true)
       }
-      navigateToLogin()
     } catch (error: any) {
       const status = error.response.status
       const { msg } = error.response.data

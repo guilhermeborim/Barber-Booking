@@ -1,9 +1,10 @@
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import { signIn } from '@/services/api/auth'
 import { LoginInterface, TFormLoginField } from '@/types/auth'
 import { useLoginForm } from '../../hooks/forms/userLoginForm'
 import { toast } from 'sonner'
 import ImgLogin from '../../assets/login.png'
+import { isAuthenticated } from '../../services/api/auth'
 import {
   Card,
   CardContent,
@@ -12,15 +13,17 @@ import {
   CardTitle,
 } from '../ui/card'
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 
 const FormLogin = () => {
-  const [isLogged, setIsLogged] = useState(false)
+  // Estado para checar se o usuario esta logado
+  const [auth, setAuth] = useState(false)
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useLoginForm()
+
   const loginFormFields = [
     {
       name: 'email',
@@ -35,34 +38,45 @@ const FormLogin = () => {
       placeholder: '******',
     },
   ]
+
+  // Verifica se existe o token no localstorage, se sim, seta o estado para true
   useEffect(() => {
     const token = localStorage.getItem('token')
     if (token) {
-      axios.defaults.headers.common.Authorization = `Bearer ${token}`
-      setIsLogged(true)
+      setAuth(true)
     }
   }, [])
-  function navigateToDashboard(id: string) {
-    window.location.href = `/dashboard/${id}`
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated()
+      setAuth(authenticated)
+    }
+    checkAuth()
+  }, [auth])
+  if (auth) {
+    return <Navigate to="/dashboard" />
   }
+  // Função para fazer login
   const onRegister = async (data: LoginInterface): Promise<void> => {
     try {
-      if (isLogged) {
+      // Verifica se o usuario ja esta logado
+      if (auth) {
         toast.error('Você já está logado')
         return
       }
       const {
-        data: { msg, token, id },
+        data: { msg, token, user, email },
         status,
       } = await signIn(data)
 
+      // Se o status for 200, seta o token no localstorage e no estado global
       if (status === 200) {
         toast.success(msg)
         localStorage.setItem('token', token)
-        axios.defaults.headers.common.Authorization = `Bearer ${token}`
-        setIsLogged(true)
+        localStorage.setItem('currentUser', JSON.stringify({ user, email }))
+        setAuth(true)
       }
-      navigateToDashboard(id)
     } catch (error: any) {
       const status = error.response.status
       const { msg } = error.response.data
@@ -76,6 +90,7 @@ const FormLogin = () => {
       }
     }
   }
+
   return (
     <main>
       <section>
