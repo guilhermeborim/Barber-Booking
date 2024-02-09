@@ -4,7 +4,7 @@ import {
   signInResponse,
   signUpResponse,
 } from '../../types/auth'
-import api from '../api'
+import { api } from '../api'
 
 export const signUp = async (dataRegister: RegisterInterface) => {
   const { data } = await api.post<signUpResponse>(

@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback } from '../ui/avatar'
 import { Card, CardContent, CardHeader } from '../ui/card'
-import useUserData, { handleLogout } from '../../hooks/user/userData'
+import useUserData from '../../hooks/user/userData'
 import twoLettersName from '@/hooks/user/userAvatar'
 import HomeCard from '.././../assets/home-card-1.png'
 import Filter from '.././../assets/Filter.png'
@@ -9,6 +9,7 @@ import { Input } from '../ui/input'
 const Header = () => {
   const { userData } = useUserData()
   const twoLetters = twoLettersName(userData?.user)
+
   return (
     <Card className="border-none rounded-none shadow-none">
       <CardHeader className="flex flex-row justify-between items-center">
@@ -36,7 +37,6 @@ const Header = () => {
           <img src={Filter} alt="" />
         </div>
       </CardContent>
-      <div onClick={handleLogout}>sair</div>
     </Card>
   )
 }
