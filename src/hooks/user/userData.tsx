@@ -1,20 +1,21 @@
-import { userDataResponse } from '@/types/auth'
-import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import Cookie from 'js-cookie'
 
-// recuperar os dados do usuário logado que esta no localstorage
-export default function useUserData() {
-  const [userData, setUserData] = useState<userDataResponse | null>(() => {
-    const user = localStorage.getItem('currentUser')
-    if (user) {
-      return JSON.parse(user)
-    }
-    return null
-  })
-
-  return { userData, setUserData }
+type infoUserType = {
+  user: string
+  id: string
 }
-
-export const handleLogout = () => {
-  localStorage.clear()
-  window.location.href = '/'
+function getUserData() {
+  const user = Cookie.get('currentUser')
+  if (user) {
+    return JSON.parse(user)
+  }
+  return null
+}
+export const InfoUser = () => {
+  const query = useQuery<infoUserType>({
+    queryKey: ['infoUser'],
+    queryFn: () => getUserData(),
+  })
+  return query
 }

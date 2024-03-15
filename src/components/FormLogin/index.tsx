@@ -1,7 +1,6 @@
 import { Link, Navigate } from 'react-router-dom'
-import { signIn } from '@/services/api/auth'
 import { LoginInterface, TFormLoginField } from '@/types/auth'
-import { useLoginForm } from '../../hooks/forms/userLoginForm'
+import { PostUserMutate, useLoginForm } from '../../hooks/forms/userLoginForm'
 import { toast } from 'sonner'
 import ImgLogin from '../../assets/login.png'
 import {
@@ -13,13 +12,11 @@ import {
 } from '../ui/card'
 import { useEffect, useState } from 'react'
 import Loading from '../Loading'
-
+import Cookie from 'js-cookie'
 const FormLogin = () => {
-  // Estado para checar se a pagina esta carregando
-  const [loading, setLoading] = useState(false)
+  const { mutate, isPending, isSuccess } = PostUserMutate()
   // Estado para checar se o usuario esta logado
   const [auth, setAuth] = useState(false)
-
   const {
     register,
     handleSubmit,
@@ -41,56 +38,54 @@ const FormLogin = () => {
     },
   ]
 
-  // Verifica se existe o token no localstorage, se sim, seta o estado para true
+  // Verifica se existe o token nos cookies, se sim, seta o estado para true
   useEffect(() => {
-    const token = localStorage.getItem('token')
+    const token = Cookie.get('token')
     if (token) {
       setAuth(true)
     }
   }, [])
 
-  if (auth) {
+  if (isSuccess || auth) {
     return <Navigate to="/dashboard" />
   }
   // Função para fazer login
-  const onLogin = async (data: LoginInterface): Promise<void> => {
-    try {
-      // Verifica se o usuario ja esta logado
-      if (auth) {
-        toast.error('Você já está logado')
-        return
-      }
-      setLoading(true)
-      const {
-        data: { msg, token, user, email },
-        status,
-      } = await signIn(data)
-      // Se o status for 200, seta o token no localstorage e no estado global
-      if (status === 200) {
-        toast.success(msg)
-        localStorage.setItem('token', token)
-        localStorage.setItem('currentUser', JSON.stringify({ user, email }))
-        setAuth(true)
-      }
-    } catch (error: any) {
-      const status = error.response.status
-      const { msg } = error.response.data
-
-      if (status === 422) {
-        toast.error(msg)
-      } else if (status === 400) {
-        toast.error(msg)
-      } else {
-        toast.error('Erro inesperado, tente novamente mais tarde')
-      }
-    } finally {
-      setLoading(false)
+  const onLogin = (data: LoginInterface) => {
+    const response = {
+      data,
     }
+    mutate(response.data, {
+      onSuccess: (data) => {
+        toast.success(data.data.msg)
+        Cookie.set('token', data.data.token)
+        Cookie.set(
+          'currentUser',
+          JSON.stringify({
+            user: data.data.user,
+            email: data.data.email,
+            id: data.data.id,
+          }),
+        )
+      },
+      onError: (error: any) => {
+        const status = error.response.status
+        const { msg } = error.response.data
+
+        if (status === 422) {
+          toast.error(msg)
+        } else if (status === 404) {
+          toast.error(msg)
+        } else {
+          toast.error('Erro inesperado, tente novamente mais tarde')
+        }
+      },
+    })
   }
+
   return (
     <main>
-      {loading ? (
-        <Loading loading={loading} />
+      {isPending ? (
+        <Loading loading={isPending} />
       ) : (
         <>
           <section>

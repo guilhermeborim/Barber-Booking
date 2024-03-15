@@ -21,9 +21,9 @@ export type signInResponse = {
   user: string
   email: string
 }
-
 export type userDataResponse = {
-  user: string
+  _id: string
+  name: string
   email: string
 }
 export type TFormRegisterField =

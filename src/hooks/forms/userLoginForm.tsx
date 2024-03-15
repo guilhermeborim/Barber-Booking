@@ -2,6 +2,8 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { LoginInterface } from '@/types/auth'
+import { useMutation } from '@tanstack/react-query'
+import { signIn } from '@/services/api/auth'
 
 export const useLoginForm = () => {
   // validacao com zod de email e senha
@@ -24,4 +26,12 @@ export const useLoginForm = () => {
     })
 
   return { register, formState, setError, handleSubmit }
+}
+
+export function PostUserMutate() {
+  const mutate = useMutation({
+    mutationFn: signIn,
+  })
+
+  return mutate
 }

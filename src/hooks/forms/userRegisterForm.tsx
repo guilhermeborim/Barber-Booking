@@ -2,6 +2,8 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { RegisterInterface } from '@/types/auth'
+import { useMutation } from '@tanstack/react-query'
+import { signUp } from '@/services/api/auth'
 
 export const useRegisterForm = () => {
   // validacao com zod de email e senha
@@ -37,4 +39,12 @@ export const useRegisterForm = () => {
     })
 
   return { register, formState, setError, handleSubmit }
+}
+
+export function PostRegisterMutate() {
+  const mutate = useMutation({
+    mutationFn: signUp,
+  })
+
+  return mutate
 }

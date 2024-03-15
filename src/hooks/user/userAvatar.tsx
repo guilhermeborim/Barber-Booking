@@ -1,3 +1,3 @@
-export default function twoLettersName(user: any) {
-  return user.substring(0, 2).toUpperCase()
+export default function twoLettersName(name: any) {
+  return name.substring(0, 2).toUpperCase()
 }

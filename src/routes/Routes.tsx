@@ -3,6 +3,7 @@ import DashboardPage from '@/pages/Dashboard'
 import { Routes, Route } from 'react-router-dom'
 import LoginPage from '@/pages/Login'
 import { PrivateRoute } from './PrivateRoute'
+import ProfilePage from '@/pages/Profile'
 function Rotas() {
   return (
     <Routes>
@@ -13,6 +14,14 @@ function Rotas() {
         element={
           <PrivateRoute>
             <DashboardPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/dashboard/profile/:id"
+        element={
+          <PrivateRoute>
+            <ProfilePage />
           </PrivateRoute>
         }
       />
